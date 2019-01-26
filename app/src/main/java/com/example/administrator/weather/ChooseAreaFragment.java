@@ -1,6 +1,7 @@
 package com.example.administrator.weather;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.example.administrator.weather.db.City;
 import com.example.administrator.weather.db.County;
 import com.example.administrator.weather.db.Province;
+import com.example.administrator.weather.gson.Weather;
 import com.example.administrator.weather.util.HttpUtil;
 import com.example.administrator.weather.util.Utility;
 
@@ -87,6 +89,19 @@ public class ChooseAreaFragment extends Fragment {
                 } else if(currentLevel == LEVEL_CITY){
                     selectedCity = cityList.get(position);
                     queryCounties();
+                } else if(currentLevel == LEVEL_COUNTY){
+                    String weatherId= countyList.get(position).getWeatherId();
+                    if(getActivity() instanceof  MainActivity){
+                        Intent intent = new Intent(getActivity(),WeatherActivity.class);
+                        intent.putExtra("weather_id",weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                    } else if(getActivity() instanceof WeatherActivity){
+                        WeatherActivity activity = (WeatherActivity)getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.requestWeather(weatherId);
+                    }
+
                 }
             }
         });
@@ -145,7 +160,6 @@ public class ChooseAreaFragment extends Fragment {
             dataList.clear();
             for(County county : countyList){
                 dataList.add(county.getCountyName());
-                Log.d("mmp",county.getCountyName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
