@@ -146,6 +146,9 @@ public class WeatherActivity extends AppCompatActivity {
                 showWeatherInfo();
             }
         });
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putString("weather_id",weatherId + "");
+        editor.apply();
     }
 
     public void showWeatherInfo(){
@@ -182,9 +185,6 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putString("Id",weatherId + "");
-        editor.apply();
     }
     public void loadBingPic(){
         String requestBingPic = "http://guolin.tech/api/bing_pic";
